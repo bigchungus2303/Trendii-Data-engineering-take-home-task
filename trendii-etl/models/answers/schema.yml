@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: q1_top_articles_by_domain
+    description: "Lists the top 5 most-viewed articles for each domain, ranked by unique page views (tagloads)."
+
+
+  - name: q2_top3_clicked_products_per_brand_final_week
+    description: "Identifies the top 3 most-clicked products for each brand in the most recent 7-day window."
+
+
+  - name: q3_most_impressed_product_per_campaign
+    description: "Finds the single product with the most impressions for each campaign within its validity period."
+
+
+  - name: q4_mount_rate_per_domain
+    description: "Calculates the fill rate (mounts/tagloads) for each domain, showing ad delivery success."
+
+
+  - name: q5_unique_users_advertised_to
+    description: "Counts the number of unique users (by device ID) who received at least one impression."

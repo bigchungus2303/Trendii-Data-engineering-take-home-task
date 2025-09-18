@@ -1,0 +1,50 @@
+version: 2
+
+sources:
+  - name: raw
+    database: "{{ env_var('DBT_DB') }}"
+    schema: raw
+    tables:
+      - name: events_jsonl
+      - name: events
+
+models:
+  - name: stg_events_base
+    description: "Base staging table for all events"
+    tests:
+      - not_null:
+          column_name: event_name
+
+  - name: stg_tagloads
+    description: "TagLoaded events"
+    columns:
+      - name: pvid
+        tests: [not_null, unique]
+      - name: tagload_at
+        tests: [not_null]
+
+  - name: stg_impressions
+    description: "Impression events"
+    tests:
+      - not_null:
+          column_name: product_id
+
+  - name: stg_clicks
+    description: "Click events"
+    tests:
+      - not_null:
+          column_name: product_id
+
+  - name: dim_products
+    description: "Products dimension table"
+    columns:
+      - name: id
+        tests: [unique, not_null]
+
+  - name: dim_campaigns
+    description: "Campaigns dimension table"
+    columns:
+      - name: id
+        tests: [not_null]
+
+

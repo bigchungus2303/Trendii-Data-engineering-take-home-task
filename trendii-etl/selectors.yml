@@ -1,0 +1,11 @@
+selectors:
+  - name: all
+    definition:
+      union:
+        - method: path
+          value: models/staging
+        - method: path
+          value: models/marts
+        - method: path
+          value: models/answers
+

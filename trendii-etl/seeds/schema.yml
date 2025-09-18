@@ -1,0 +1,177 @@
+version: 2
+
+seeds:
+  - name: dim_product
+    description: "Product dimension table containing product information"
+    columns:
+      - name: id
+        description: "Unique identifier of each product"
+        tests:
+          - not_null
+          - unique
+      
+      - name: brand_id
+        description: "Unique identifier for the brand that supplies the product"
+        tests:
+          - not_null
+          - relationships:
+              arguments:  # ← Wrap in arguments
+                to: ref('dim_brand')
+                field: id
+      
+      - name: sku
+        description: "Stock Keeping Unit - Brand's identifier for a product"
+        tests:
+          - not_null
+          - unique
+      
+      - name: name
+        description: "Name of the product"
+        tests:
+          - not_null
+          - dbt_utils.not_empty_string
+      
+      - name: product_url
+        description: "Link to the product's page"
+        tests:
+          - dbt_utils.not_empty_string
+          - dbt_expectations.expect_column_values_to_match_regex:
+              arguments:  # ← Wrap in arguments
+                regex: '^https?://.+'
+      
+      - name: image_url
+        description: "Link to product's image"
+        tests:
+          - dbt_expectations.expect_column_values_to_match_regex:
+              arguments:  # ← Wrap in arguments
+                regex: '^https?://.+'
+      
+      - name: price
+        description: "RRP of the product"
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              arguments:  # ← Wrap in arguments
+                min_value: 0
+                inclusive: false
+      
+      - name: sale_price
+        description: "Sale price of the product. NULL if not on sale"
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:  # ← Wrap in arguments
+                min_value: 0
+                inclusive: false
+      
+      - name: created_at
+        description: "Date the product was ingested by TRENDii"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              arguments:  # ← Wrap in arguments
+                column_type: date
+
+  - name: dim_campaign
+    description: "Campaign dimension table with SCD Type 2 history"
+    columns:
+      - name: id
+        description: "Unique identifier for a campaign"
+        tests:
+          - not_null
+      
+      - name: name
+        description: "Name of the campaign"
+        tests:
+          - not_null
+          - dbt_utils.not_empty_string
+      
+      - name: brand_id
+        description: "Unique identifier of the brand the campaign is associated with"
+        tests:
+          - not_null
+          - relationships:
+              arguments:  # ← Wrap in arguments
+                to: ref('dim_brand')
+                field: id
+      
+      - name: product_type
+        description: "Type of billing the campaign is for"
+        tests:
+          - accepted_values:
+              arguments:  # ← Wrap in arguments
+                values: ['CPC', 'CPA', 'CPM']
+      
+      - name: cpc_rate
+        description: "Cost per click rate (when product_type is CPC)"
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:  # ← Wrap in arguments
+                min_value: 0
+                inclusive: false
+      
+      - name: cpm_rate
+        description: "Cost per thousand impressions rate (when product_type is CPM)"
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:  # ← Wrap in arguments
+                min_value: 0
+                inclusive: false
+      
+      - name: cpa_percentage
+        description: "Commission percentage (when product_type is CPA)"
+        tests:
+          - dbt_utils.accepted_range:
+              arguments:  # ← Wrap in arguments
+                min_value: 0
+                max_value: 1
+                inclusive: true
+      
+      - name: company_name
+        description: "Name of the company the campaign is associated with"
+        tests:
+          - not_null
+          - dbt_utils.not_empty_string
+      
+      - name: company_domain
+        description: "URL domain of the company's primary website"
+        tests:
+          - dbt_utils.not_empty_string
+      
+      - name: created_at
+        description: "When the campaign was created"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              arguments:  # ← Wrap in arguments
+                column_type: date
+      
+      - name: valid_from
+        description: "When this state of the campaign is valid from"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              arguments:  # ← Wrap in arguments
+                column_type: date
+      
+      - name: valid_to
+        description: "When this state of the campaign is valid to"
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_values_to_be_of_type:
+              arguments:  # ← Wrap in arguments
+                column_type: date
+      
+      - name: current_record
+        description: "If this is the current state of the campaign"
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:  # ← Wrap in arguments
+                values: [true, false]
+
+    tests:  # Table-level tests for dim_campaign
+      - dbt_utils.unique_combination_of_columns:
+          arguments:  # ← Wrap in arguments
+            combination_of_columns:
+              - id
+              - valid_from

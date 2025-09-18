@@ -1,0 +1,52 @@
+name: "trendii"
+version: "1.0.0"
+config-version: 2
+
+profile: "trendii"
+
+model-paths: ["models"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+
+models:
+  trendii:
+    +materialized: view
+    staging:
+      +schema: staging
+    marts:
+      +schema: marts
+    answers:
+      +schema: answers
+
+seeds:
+  trendii:
+    +schema: analytics
+    dim_product:
+      +quote_columns: false
+      +column_types:
+        id: varchar(50) 
+        brand_id: varchar(50)
+        sku: varchar(50)
+        name: text
+        product_url: text
+        image_url: text
+        price: float
+        sale_price: float
+        created_at: date
+    dim_campaign:
+      +quote_columns: false
+      +column_types:
+        id: bigint
+        name: varchar(50)
+        brand_id: varchar(50)
+        product_type: varchar(50)
+        cpc_rate: float
+        cpm_rate: float
+        cpa_percentage: float
+        company_name: text
+        company_domain: text
+        created_at: date
+        valid_from: date
+        valid_to: date
+        current_record: boolean
+

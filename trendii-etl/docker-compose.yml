@@ -1,0 +1,54 @@
+services:
+  postgres:
+    build: ./docker/postgres
+    container_name: trendii_pg
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${PG_PORT}:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+      - ./sql/init:/docker-entrypoint-initdb.d
+      - ./data/raw:/data/raw
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  dbt:
+    image: ghcr.io/dbt-labs/dbt-postgres:1.9.0
+    container_name: trendii_dbt
+    depends_on:
+      postgres:
+        condition: service_healthy
+    working_dir: /usr/app
+    environment:
+      DBT_PROFILES_DIR: /usr/app/profiles
+      DBT_USER: ${POSTGRES_USER}
+      DBT_PASS: ${POSTGRES_PASSWORD}
+      DBT_HOST: postgres
+      DBT_PORT: 5432
+      DBT_DB: ${POSTGRES_DB}
+      DBT_SCHEMA: analytics
+    volumes:
+      - ./:/usr/app
+    entrypoint: [ "bash", "-lc" ]
+    command: >
+      "dbt deps &&
+       dbt seed --full-refresh &&
+       dbt build --selector all"
+
+  #Optional admin UI; comment this out if you don't need it
+  pgadmin:
+    image: dpage/pgadmin4:8.12
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      postgres:
+        condition: service_healthy

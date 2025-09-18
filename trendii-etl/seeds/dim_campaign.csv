@@ -1,0 +1,7 @@
+id,name,brand_id,product_type,cpc_rate,cpm_rate,cpa_percentage,company_name,company_domain,created_at,valid_from,valid_to,current_record
+33451439714,Oz Home Hub - New Deal,67c645cbfb3e21d513fd4920,CPC,0.5,,,theozhomehub,ozhomehub.com.au,2025-02-13,2025-03-11,2025-05-12,FALSE
+33451439714,Oz Home Hub - New Deal,67c645cbfb3e21d513fd4920,CPC,0.75,,,theozhomehub,ozhomehub.com.au,2025-02-13,2025-05-13,9999-12-31,TRUE
+36135620894,Country Road - CPA - New Deal,64a20f875f0c5f22b1d286f4,CPA,,,0.08,Country Road Group,countryroadgroup.com.au,2025-04-23,2025-04-23,9999-12-31,TRUE
+14929485386,Fantastic Furniture Q1 2024,64e364739768e915be413729,CPC,1,,,Fantastic Furniture,fantasticfurniture.com.au,2023-09-01,2025-03-05,9999-12-31,TRUE
+16962092580,Iconic - Q1 2024,60ffee806fe59800740af36d,,0.4,,,The Iconic,theiconic.com.au,2024-01-16,2024-01-16,9999-12-31,TRUE
+18921692260,Forever New - CPA - Trial,60ffee7f6fe59800740af2d1,CPA,,,0.1,Forever New Pty Ltd,forevernew.com.au,2024-05-15,2024-05-15,9999-12-31,TRUE

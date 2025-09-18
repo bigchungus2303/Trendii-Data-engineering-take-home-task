@@ -1,0 +1,89 @@
+# Environment variables
+.dataenv
+.env.local
+.env.*.local
+
+# Docker volumes and data
+pgdata/
+*.log
+
+# Raw data files
+data/raw/events/*.parquet
+data/raw/events/*.jsonl
+data/raw/events/*.json
+data/raw/events/*.csv
+
+# dbt artifacts
+target/
+dbt_packages/
+logs/
+.dbt/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+dataENV/
+dataenv/
+.dataenv/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# Docker build context (if any large files)
+*.tar
+*.gz
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# pytest cache
+.pytest_cache/
+.coverage
+
+# Node modules (if any JS tooling is added)
+node_modules/
+
+# Local configuration overrides
+profiles/profiles_local.yml
+docker-compose.override.yml
+
