@@ -2,6 +2,44 @@
 
 This guide provides a comprehensive overview of all dbt models in the TRENDii data pipeline, explaining the transformation process from raw Parquet data to final analytical outputs.
 
+# Table of Contents
+
+1. [Data Flow Overview](#-data-flow-overview)
+2. [Model Architecture](#-model-architecture)
+   - [Layer 1: Sources](#layer-1-sources)
+   - [Layer 2: Staging](#layer-2-staging)
+   - [Layer 3: Marts](#layer-3-marts)
+   - [Layer 4: Answers](#layer-4-answers)
+3. [Model Catalog](#-model-catalog)
+   - [Sources Layer](#sources-layer)
+     - [raw.events_jsonl](#rawevents_jsonl)
+     - [raw.events](#rawevents)
+   - [Staging Layer](#staging-layer)
+     - [src_events_raw](#src_events_raw)
+     - [stg_events_base](#stg_events_base)
+     - [stg_tagloads](#stg_tagloads)
+     - [stg_mounts](#stg_mounts)
+     - [stg_impressions](#stg_impressions)
+     - [stg_clicks](#stg_clicks)
+   - [Marts Layer](#marts-layer)
+     - [dim_products](#dim_products)
+     - [dim_campaigns](#dim_campaigns)
+     - [f_impressions](#f_impressions)
+     - [f_clicks](#f_clicks)
+     - [f_mounts](#f_mounts)
+     - [f_tagloads](#f_tagloads)
+   - [Answers Layer](#answers-layer)
+     - [q1_top_articles_by_domain](#q1_top_articles_by_domain)
+     - [q2_top3_clicked_products_per_brand_final_week](#q2_top3_clicked_products_per_brand_final_week)
+     - [q3_most_impressed_product_per_campaign](#q3_most_impressed_product_per_campaign)
+     - [q4_mount_rate_per_domain](#q4_mount_rate_per_domain)
+     - [q5_unique_users_advertised_to](#q5_unique_users_advertised_to)
+4. [Transformation Patterns](#-transformation-patterns)
+5. [Data Quality Framework](#-data-quality-framework)
+6. [Business Logic Summary](#-business-logic-summary)
+7. [Technical Implementation Details](#-technical-implementation-details)
+
+
 ## 📊 Data Flow Overview
 
 
