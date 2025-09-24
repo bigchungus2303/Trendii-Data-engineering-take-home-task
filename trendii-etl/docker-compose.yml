@@ -1,6 +1,9 @@
+version: "3.9"
+
 services:
   postgres:
-    build: ./docker/postgres
+    image: postgres:16
+    platform: linux/amd64
     container_name: trendii_pg
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -20,6 +23,7 @@ services:
 
   dbt:
     image: ghcr.io/dbt-labs/dbt-postgres:1.9.0
+    platform: linux/amd64
     container_name: trendii_dbt
     depends_on:
       postgres:
@@ -35,15 +39,16 @@ services:
       DBT_SCHEMA: analytics
     volumes:
       - ./:/usr/app
-    entrypoint: [ "bash", "-lc" ]
-    command: >
-      "dbt deps &&
-       dbt seed --full-refresh &&
-       dbt build --selector all"
+    entrypoint: ["bash","-lc"]
+    command: |
+      dbt deps && \
+      dbt seed --full-refresh && \
+      dbt build --selector all
 
-  #Optional admin UI; comment this out if you don't need it
   pgadmin:
     image: dpage/pgadmin4:8.12
+    platform: linux/amd64
+    container_name: trendii_pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@example.com
       PGADMIN_DEFAULT_PASSWORD: admin
