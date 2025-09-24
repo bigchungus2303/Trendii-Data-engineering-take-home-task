@@ -1,24 +1,20 @@
 {{ config(materialized='materialized_view') }}
 
 -- "Fill Rate" per prompt = mounts/tagloads (mounts per page load)
-with tagloads as (
-  select domain, count(*) as tagloads
-  from {{ ref('stg_tagloads') }}
-  group by 1
+with tl as (
+  select lower(domain) as domain, count(*) as tagloads
+  from {{ ref('stg_tagloads') }} group by 1
 ),
-mounts as (
-  select domain, count(*) as mounts
-  from {{ ref('f_mounts') }}
-  group by 1
+m as (
+  select lower(domain) as domain, count(distinct pvid) as mounts
+  from {{ ref('stg_mounts') }} group by 1
 )
 select
-  coalesce(m.domain, t.domain) as domain,
-  coalesce(m.mounts, 0) as mounts,
-  coalesce(t.tagloads, 0) as tagloads,
-  case when coalesce(t.tagloads,0) = 0 then 0
-       else coalesce(m.mounts,0)::numeric / t.tagloads::numeric
-  end as fill_rate
-from mounts m
-full join tagloads t using (domain)
-order by domain
+  coalesce(t.domain, m.domain) as domain,
+  coalesce(m.mounts, 0)        as mounts,
+  coalesce(t.tagloads, 0)      as tagloads,
+  coalesce(m.mounts, 0)::numeric / nullif(coalesce(t.tagloads, 0), 0) as fill_rate
+from tl t
+full join m using (domain)
+order by domain;
 
