@@ -32,6 +32,29 @@ def loader():
         try:
             cur.execute("""
                 CREATE SCHEMA IF NOT EXISTS raw;
+                -- Answers layer (materialized views)
+                DROP MATERIALIZED VIEW IF EXISTS analytics_answers.q1_top_articles_by_domain;
+                DROP MATERIALIZED VIEW IF EXISTS analytics_answers.q2_top3_clicked_products_per_brand_final_week;
+                DROP MATERIALIZED VIEW IF EXISTS analytics_answers.q5_unique_users_advertised_to;
+                DROP MATERIALIZED VIEW IF EXISTS analytics_answers.q3_most_impressed_product_per_campaign;
+                DROP MATERIALIZED VIEW IF EXISTS analytics_answers.q4_mount_rate_per_domain;
+
+                -- Marts layer (materialized views)
+                DROP MATERIALIZED VIEW IF EXISTS analytics_marts.f_tagloads;
+                DROP MATERIALIZED VIEW IF EXISTS analytics_marts.f_clicks;
+                DROP MATERIALIZED VIEW IF EXISTS analytics_marts.f_impressions;
+                DROP MATERIALIZED VIEW IF EXISTS analytics_marts.f_mounts;
+
+                -- Staging layer (views)
+                DROP VIEW IF EXISTS analytics_staging.stg_tagloads;
+                DROP VIEW IF EXISTS analytics_staging.stg_clicks;
+                DROP VIEW IF EXISTS analytics_staging.stg_impressions;
+                DROP VIEW IF EXISTS analytics_staging.stg_mounts;
+                DROP VIEW IF EXISTS analytics_staging.stg_events_base;
+                DROP VIEW IF EXISTS analytics_staging.src_events_raw;
+
+                -- Raw layer
+                DROP VIEW IF EXISTS raw.events;   
                 DROP TABLE IF EXISTS raw.events_jsonl;
                 CREATE TABLE IF NOT EXISTS raw.events_jsonl (line jsonb);
             """)
